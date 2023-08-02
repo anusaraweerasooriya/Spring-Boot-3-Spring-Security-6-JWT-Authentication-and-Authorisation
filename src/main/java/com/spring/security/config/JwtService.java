@@ -1,6 +1,7 @@
 package com.spring.security.config;
 
 import java.security.Key;
+import java.util.function.Function;
 
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,12 @@ public class JwtService {
     private static final String SECRET_KEY = "npNjBMkNQH0Q8PKCMBjpRVx0jsbuQpsfvD32fCIF9CAtC8A97JebQtUYO0rGGZ6RVeAyXD5hcRTAf8y20D7At80lAUWf37rNt5nIoWCzrJCEtlQyWZfngE902OeIL8k2lCqn+aiXQn1jw92gVQGcUP+g4+Y9TyeeRCcvdZI6Ltfb/t4ZUGFBzkwz99AKEOvt/o0S1AiOxdGrGMJ8Tf5fQWeSXj10wHzyrJXNxIpAZBkHBocucYHdMRWJBiCa9tWabJmapp28EJhXbCfa7AgosI0t4o5DFEZ4vJKhyvTsnR8ou+vNttsx8RzEearQCnvfTFmGmGjQSlNX3e4dfxQxE55S1QunTd3yzCTxNWK69Zk";
 
     public String extractUsername(String token) {
-        return null;
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {
